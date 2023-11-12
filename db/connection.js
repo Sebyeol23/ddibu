@@ -8,4 +8,14 @@ const conn = db.createConnection({
     database: "ddibudb"
 });
 
+//db 연결
+conn.connect((error) => {
+  if(error){
+    console.error('Database connection failed: ', error);
+  }
+  else{
+    console.log('Database connected successfully');
+  }
+});
+
 module.exports = conn;
