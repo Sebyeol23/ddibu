@@ -13,7 +13,7 @@ const conn = db.createConnection({
 //db 연결
 conn.connect((error) => {
   if(error){
-    console.error('Database connection failed: ', error);
+    throw(error);
   }
   else{
     console.log('Database connected successfully');
