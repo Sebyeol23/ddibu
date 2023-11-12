@@ -1,11 +1,13 @@
 const db = require('mysql');
 
+require('dotenv').config();
+
 const conn = db.createConnection({
-    host: "ddibu-db.c0gb6t2au2fn.ap-northeast-2.rds.amazonaws.com",
-    port: "3306",
-    user: "sebyeol",
-    password: "cube2325",
-    database: "ddibudb"
+    host: process.env.DATABASE_HOST,
+    port: process.env.DATABASE_PORT,
+    user: process.env.DATABASE_USER,
+    password: process.env.DATABASE_PASSWORD,
+    database: process.env.DATABASE_DATABASE
 });
 
 //db 연결
