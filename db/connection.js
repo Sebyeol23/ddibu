@@ -21,7 +21,26 @@ conn.connect((error) => {
     var sql = "CREATE TABLE user ("
     +"id VARCHAR(100) PRIMARY KEY,"
     +"password VARCHAR(100) NOT NULL,"
+    +"name VARCHAR(100) NOT NULL,"
     +"location VARCHAR(100) NULL)";
+
+    conn.query(sql, (err, result) => {
+        if(err && err.code != "ER_TABLE_EXISTS_ERROR"){
+            throw err;
+        }
+        console.log("Table created successfully");
+    });
+
+    sql = "CREATE TABLE product ("
+    +"id INT AUTO_INCREMENT PRIMARY KEY,"
+    +"title VARCHAR(100) NOT NULL,"
+    +"price INT NOT NULL,"
+    +"date DATETIME NOT NULL,"
+    +"body VARCHAR(200) NOT NULL,"
+    +"location VARCHAR(100) NULL,"
+    +"status TINYINT(1) NOT NULL DEFAULT 0,"
+    +"seller VARCHAR(100) NOT NULL,"
+    +"FOREIGN KEY(seller) REFERENCES user(id))";
 
     conn.query(sql, (err, result) => {
         if(err && err.code != "ER_TABLE_EXISTS_ERROR"){
@@ -32,90 +51,9 @@ conn.connect((error) => {
 
     sql = "CREATE TABLE image ("
     +"id INT AUTO_INCREMENT PRIMARY KEY,"
-    +"link VARCHAR(100) NOT NULL)";
-
-    conn.query(sql, (err, result) => {
-        if(err && err.code != "ER_TABLE_EXISTS_ERROR"){
-            throw err;
-        }
-        console.log("Table created successfully");
-    });
-
-    sql = "CREATE TABLE transaction ("
-    +"id INT AUTO_INCREMENT PRIMARY KEY,"
-    +"title VARCHAR(100) NOT NULL,"
-    +"price INT NOT NULL,"
-    +"date DATE NOT NULL,"
-    +"sellerId VARCHAR(100) NOT NULL,"
-    +"buyerId VARCHAR(100) NOT NULL,"
-    +"imageId INT NOT NULL,"
-    +"FOREIGN KEY(sellerId) REFERENCES user(id),"
-    +"FOREIGN KEY(buyerId) REFERENCES user(id),"
-    +"FOREIGN KEY(imageId) REFERENCES image(id))";
-
-    conn.query(sql, (err, result) => {
-        if(err && err.code != "ER_TABLE_EXISTS_ERROR"){
-            throw err;
-        }
-        console.log("Table created successfully");
-    });
-
-    sql = "CREATE TABLE salePost ("
-    +"id INT AUTO_INCREMENT PRIMARY KEY,"
-    +"title VARCHAR(100) NOT NULL,"
-    +"price INT NOT NULL,"
-    +"date DATE NOT NULL,"
-    +"body VARCHAR(200) NOT NULL,"
-    +"location VARCHAR(100) NULL,"
-    +"userId VARCHAR(100) NOT NULL,"
-    +"imageId INT NULL,"
-    +"FOREIGN KEY(userId) REFERENCES user(id),"
-    +"FOREIGN KEY(imageId) REFERENCES image(id))";
-
-    conn.query(sql, (err, result) => {
-        if(err && err.code != "ER_TABLE_EXISTS_ERROR"){
-            throw err;
-        }
-        console.log("Table created successfully");
-    });
-
-    sql = "CREATE TABLE wishList ("
-    +"id INT AUTO_INCREMENT PRIMARY KEY,"
-    +"userId VARCHAR(100) NOT NULL,"
-    +"postId INT NOT NULL,"
-    +"FOREIGN KEY(userId) REFERENCES user(id),"
-    +"FOREIGN KEY(postId) REFERENCES salePost(id))";
-
-    conn.query(sql, (err, result) => {
-        if(err && err.code != "ER_TABLE_EXISTS_ERROR"){
-            throw err;
-        }
-        console.log("Table created successfully");
-    });
-
-    sql = "CREATE TABLE chatRoom ("
-    +"id INT AUTO_INCREMENT PRIMARY KEY,"
-    +"sellerId VARCHAR(100) NOT NULL,"
-    +"buyerId VARCHAR(100) NOT NULL,"
-    +"FOREIGN KEY(sellerId) REFERENCES user(id),"
-    +"FOREIGN KEY(buyerId) REFERENCES user(id))";
-
-    conn.query(sql, (err, result) => {
-        if(err && err.code != "ER_TABLE_EXISTS_ERROR"){
-            throw err;
-        }
-        console.log("Table created successfully");
-    });
-
-    sql = "CREATE TABLE chat ("
-    +"id INT AUTO_INCREMENT PRIMARY KEY,"
-    +"message VARCHAR(200) NOT NULL,"
-    +"dateTime DATETIME NOT NULL,"
-    +"readCheck TINYINT(1) NOT NULL,"
-    +"userId VARCHAR(100) NOT NULL,"
-    +"roomId INT NOT NULL,"
-    +"FOREIGN KEY(userId) REFERENCES user(id),"
-    +"FOREIGN KEY(roomId) REFERENCES chatRoom(id))";
+    +"link VARCHAR(100) NOT NULL,"
+    +"pid INT NOT NULL,"
+    +"FOREIGN KEY(pid) REFERENCES product(id))";
 
     conn.query(sql, (err, result) => {
         if(err && err.code != "ER_TABLE_EXISTS_ERROR"){
@@ -127,8 +65,70 @@ conn.connect((error) => {
     sql = "CREATE TABLE tag ("
     +"id INT AUTO_INCREMENT PRIMARY KEY,"
     +"name VARCHAR(100) NOT NULL,"
-    +"postId INT NOT NULL,"
-    +"FOREIGN KEY(postId) REFERENCES salePost(id))";
+    +"pid INT NOT NULL,"
+    +"FOREIGN KEY(pid) REFERENCES product(id))";
+
+    conn.query(sql, (err, result) => {
+        if(err && err.code != "ER_TABLE_EXISTS_ERROR"){
+            throw err;
+        }
+        console.log("Table created successfully");
+    });
+
+    sql = "CREATE TABLE wishList ("
+    +"uid VARCHAR(100) NOT NULL,"
+    +"pid INT NOT NULL,"
+    +"PRIMARY KEY(uid, pid),"
+    +"FOREIGN KEY(uid) REFERENCES user(id),"
+    +"FOREIGN KEY(pid) REFERENCES product(id))";
+
+    conn.query(sql, (err, result) => {
+        if(err && err.code != "ER_TABLE_EXISTS_ERROR"){
+            throw err;
+        }
+        console.log("Table created successfully");
+    });
+
+    sql = "CREATE TABLE transaction ("
+    +"pid INT PRIMARY KEY,"
+    +"date DATETIME NOT NULL,"
+    +"buyer VARCHAR(100) NOT NULL,"
+    +"FOREIGN KEY(pid) REFERENCES product(id),"
+    +"FOREIGN KEY(buyer) REFERENCES user(id))";
+
+    conn.query(sql, (err, result) => {
+        if(err && err.code != "ER_TABLE_EXISTS_ERROR"){
+            throw err;
+        }
+        console.log("Table created successfully");
+    });
+
+    sql = "CREATE TABLE chatRoom ("
+    +"buyer VARCHAR(100) NOT NULL,"
+    +"pid INT NOT NULL,"
+    +"date DATETIME NOT NULL,"
+    +"PRIMARY KEY(buyer, pid),"
+    +"FOREIGN KEY(buyer) REFERENCES user(id),"
+    +"FOREIGN KEY(pid) REFERENCES product(id))";
+
+    conn.query(sql, (err, result) => {
+        if(err && err.code != "ER_TABLE_EXISTS_ERROR"){
+            throw err;
+        }
+        console.log("Table created successfully");
+    });
+
+    sql = "CREATE TABLE chat ("
+    +"buyer VARCHAR(100) NOT NULL,"
+    +"pid INT NOT NULL,"
+    +"message VARCHAR(100) NOT NULL,"
+    +"date DATETIME NOT NULL,"
+    +"status TINYINT(1) NOT NULL,"
+    +"sender VARCHAR(100) NOT NULL,"
+    +"PRIMARY KEY(buyer, pid),"
+    +"FOREIGN KEY(buyer) REFERENCES user(id),"
+    +"FOREIGN KEY(pid) REFERENCES product(id),"
+    +"FOREIGN KEY(sender) REFERENCES user(id))";
 
     conn.query(sql, (err, result) => {
         if(err && err.code != "ER_TABLE_EXISTS_ERROR"){
