@@ -10,6 +10,8 @@ const pool = mysql.createPool({
     database: process.env.DB_DATABASE
 });
 
+console.log(process.env.DB_HOST);
+
 //db 연결
 // conn.connect((error) => {
 //   if(error){
