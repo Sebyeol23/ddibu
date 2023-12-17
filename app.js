@@ -1,12 +1,18 @@
-const express = require('express')
-const app = express()
-const port = 3000
+const express = require('express');
+const bodyParser = require('body-parser');
 
-const db = require('./db/connection')
+const app = express();
+const port = 3000;
+
+const accountRouter = require('./routes/account');
+
+app.use(bodyParser.json());
 
 app.get('/', (req, res) => {
   res.send('Hello World!')
 })
+
+app.use('/api/account', accountRouter);
 
 app.listen(port, () => {
   console.log(`Example app listening at http://localhost:${port}`)
