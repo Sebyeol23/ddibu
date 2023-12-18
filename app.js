@@ -1,10 +1,17 @@
 const express = require('express');
 const bodyParser = require('body-parser');
+const cors = require('cors');
 
 const app = express();
 const port = process.env.PORT || 80;
 
+const allowedOrigins = ['https://ddibux2.netlify.app', 'http://localhost:3000'];
+
 const accountRouter = require('./routes/account');
+
+app.use(cors({
+  origin: allowedOrigins
+}));
 
 app.use(bodyParser.json());
 
