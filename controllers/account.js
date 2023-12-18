@@ -20,28 +20,29 @@ function createUser(req, res){
 
 function getToken(req, res){
     pool.getConnection((error, db)=>{
-        if(error){
-            return res.status(500).json({error: error});
-        }
-        if(error) return res.status(400).json({error: error});
+        if(error) return res.status(500).json({error: error});
         db.query(`SELECT password FROM user WHERE id = ${JSON.stringify(req.body.id)}`, (error, results)=>{
             db.release();
             if(error) return res.status(400).json({error: error});
             if(!results.length) return res.status(404).json({error: "등록되지 않은 id 입니다."});
-            if(JSON.stringify(req.body.pw) != results[0].password) return res.status(400).json({error: "비밀번호가 일치하지 않습니다."});
-            const key = 'key'; //환경변수로 바꿔줘야 함
-            const id = JSON.stringify(req.body.id);
-            const token = jwt.sign(
-                {
-                    userId: id
-                },
-                key,
-                {
-                    expiresIn: "10m"
-                }
-            );
+            bcrypt.compare(JSON.stringify(req.body.pw), results[0].password, (error, same)=>{
+                if(error) return res.status(500).json({error: error});
+                if(!same) return res.status(400).json({error: "비밀번호가 일치하지 않습니다."});
 
-            return res.status(200).json({token: token});
+                const key = 'key'; //환경변수로 바꿔줘야 함
+                const id = JSON.stringify(req.body.id);
+                const token = jwt.sign(
+                    {
+                        userId: id
+                    },
+                    key,
+                    {
+                        expiresIn: "10m"
+                    }
+                );
+
+                return res.status(200).json({token: token});
+            });
         });
     });
 }
