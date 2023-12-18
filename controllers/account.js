@@ -1,3 +1,4 @@
+const bcrypt = require('bcrypt');
 const pool = require('../db/connection');
 
 function createUser(req, res){
@@ -5,12 +6,15 @@ function createUser(req, res){
         if(error){
             return res.status(500).json({error: error});
         }
-        db.query(`INSERT INTO user(id, password, name) VALUES(${JSON.stringify(req.body.id)}, ${JSON.stringify(req.body.pw)}, '게스트')`, (error)=>{
-            db.release();
+        bcrypt.hash(JSON.stringify(req.body.pw), 10, (error, pw)=>{
             if(error) return res.status(400).json({error: error});
-            return res.sendStatus(200);
-        })
-    })
+            db.query(`INSERT INTO user(id, password, name) VALUES(${JSON.stringify(req.body.id)}, '${pw}', '게스트')`, (error)=>{
+                db.release();
+                if(error) return res.status(400).json({error: error});
+                return res.sendStatus(200);
+            });
+        });
+    });
 }
 
 module.exports = {
