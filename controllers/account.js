@@ -1,6 +1,5 @@
-import jwt from 'jsonwebtoken';
-
 const bcrypt = require('bcrypt');
+const jwt = require('jsonwebtoken');
 const pool = require('../db/connection');
 
 function createUser(req, res){
