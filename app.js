@@ -3,7 +3,7 @@ const bodyParser = require('body-parser');
 const cors = require('cors');
 
 const app = express();
-const port = process.env.PORT || 80;
+const port = process.env.PORT || 443;
 
 const allowedOrigins = ['https://ddibux2.netlify.app', 'http://localhost:3000'];
 
@@ -22,5 +22,5 @@ app.get('/', (req, res) => {
 app.use('/api/account', accountRouter);
 
 app.listen(port, () => {
-  console.log(`Example app listening at http://localhost:${port}`)
+  console.log(`Example app listening at https://localhost`)
 })
