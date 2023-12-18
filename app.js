@@ -8,6 +8,7 @@ const port = process.env.PORT || 80;
 const allowedOrigins = ['https://ddibux2.netlify.app', 'http://localhost:3000'];
 
 const accountRouter = require('./routes/account');
+const homeRouter = require('./routes/home');
 
 app.use(cors({
   origin: allowedOrigins
@@ -20,6 +21,7 @@ app.get('/', (req, res) => {
 })
 
 app.use('/api/account', accountRouter);
+app.use('/api/home', homeRouter);
 
 app.listen(port, () => {
   console.log(`Example app listening at http://localhost:${port}`)
