@@ -12,6 +12,18 @@ function getUser(req, res){
     });
 }
 
+function updateUser(req, res){
+    pool.getConnection((error, db)=>{
+        if(error) return res.status(500).json({error: error});
+        db.query(`UPDATE user SET name = '${req.body.newName}', location = '${req.body.newLocation !== undefined ? req.body.newLocation : null}' WHERE id = '${req.decoded.userId}'`, (error, results)=>{
+            db.release();
+            if(error) return res.status(400).json({error: error});
+            return res.sendStatus(200);
+        });
+    });
+}
+
 module.exports = {
-    getUser
+    getUser,
+    updateUser
 }
