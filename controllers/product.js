@@ -20,7 +20,7 @@ function createProduct(req, res){
       if(error){
           return res.status(500).json({error: error});
       }
-      db.query(`INSERT INTO product(title, body, price, date, seller) VALUES('${req.body.title}', '${req.body.body}', '${req.body.price}', '${req.body.date}', '${req.body.seller}')`, (error, result)=>{        
+      db.query(`INSERT INTO product(title, body, price, date, seller) VALUES('${req.body.title}', '${req.body.body}', '${req.body.price}', '${req.body.date}', '${req.decoded.userId}')`, (error, result)=>{        
           if(error){
             db.release();
             return res.status(400).json({error: error});
