@@ -89,20 +89,6 @@ const pool = mysql.createPool({
 //         console.log("Table created successfully");
 //     });
 
-//     sql = "CREATE TABLE transaction ("
-//     +"pid INT PRIMARY KEY,"
-//     +"date DATETIME NOT NULL,"
-//     +"buyer VARCHAR(100) NOT NULL,"
-//     +"FOREIGN KEY(pid) REFERENCES product(id),"
-//     +"FOREIGN KEY(buyer) REFERENCES user(id))";
-
-//     conn.query(sql, (err, result) => {
-//         if(err && err.code != "ER_TABLE_EXISTS_ERROR"){
-//             throw err;
-//         }
-//         console.log("Table created successfully");
-//     });
-
 //     sql = "CREATE TABLE chatRoom ("
 //     +"buyer VARCHAR(100) NOT NULL,"
 //     +"pid INT NOT NULL,"
