@@ -10,6 +10,7 @@ const allowedOrigins = ['https://ddibux2.netlify.app', 'http://localhost:3000'];
 const accountRouter = require('./routes/account');
 const homeRouter = require('./routes/home');
 const productRouter = require('./routes/product');
+const profileRouter = require('./routes/profile');
 
 app.use(cors({
   origin: allowedOrigins
@@ -24,6 +25,7 @@ app.get('/', (req, res) => {
 app.use('/api/account', accountRouter);
 app.use('/api/home', homeRouter);
 app.use('/api/product', productRouter);
+app.use('/api/profile', profileRouter);
 
 app.listen(port, () => {
   console.log(`Example app listening at http://localhost:${port}`)
