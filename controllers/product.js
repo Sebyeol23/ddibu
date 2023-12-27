@@ -1,5 +1,6 @@
 const multer = require('multer');
 const path = require('path');
+const pool = require('../db/connection');
 
 const uploadDir = path.join(__dirname, '../public/images');
 const storage = multer.diskStorage({
@@ -15,7 +16,22 @@ const storage = multer.diskStorage({
 const upload = multer({ storage });
 
 function createProduct(req, res){
-  res.sendStatus(200);
+  pool.getConnection((error, db)=>{
+      if(error){
+          return res.status(500).json({error: error});
+      }
+      db.query(`INSERT INTO product(title, body, price, date, seller) VALUES('${req.body.title}', '${req.body.body}', '${req.body.price}', '${req.body.date}', '${req.body.seller}')`, (error, result)=>{        
+          if(error){
+            db.release();
+            return res.status(400).json({error: error});
+          }
+          db.query(`INSERT INTO image(link, pid) VALUES('${req.file.filename}', '${result.insertId}')`, (error)=>{
+            db.release();    
+            if(error) return res.status(400).json({error: error});
+            return res.sendStatus(200);
+          });
+      });
+  });
 }
 
 module.exports = {
