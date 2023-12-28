@@ -14,6 +14,7 @@ const accountRouter = require('./routes/account');
 const homeRouter = require('./routes/home');
 const productRouter = require('./routes/product');
 const profileRouter = require('./routes/profile');
+const chatRouter = require('./routes/chat');
 
 app.use(cors({
   origin: allowedOrigins
@@ -29,6 +30,7 @@ app.use('/api/account', accountRouter);
 app.use('/api/home', homeRouter);
 app.use('/api/product', productRouter);
 app.use('/api/profile', profileRouter);
+app.use('/api/chat', chatRouter);
 
 // HTTP 서버 생성
 const server = http.createServer(app);
