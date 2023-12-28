@@ -1,8 +1,11 @@
 const express = require('express');
 const bodyParser = require('body-parser');
 const cors = require('cors');
+const http = require('http');
+const socketIO = require('socket.io');
 
 const app = express();
+
 const port = process.env.PORT || 80;
 
 const allowedOrigins = ['https://ddibux2.netlify.app', 'http://localhost:3000'];
@@ -27,6 +30,26 @@ app.use('/api/home', homeRouter);
 app.use('/api/product', productRouter);
 app.use('/api/profile', profileRouter);
 
-app.listen(port, () => {
-  console.log(`Example app listening at http://localhost:${port}`)
-})
+// HTTP 서버 생성
+const server = http.createServer(app);
+
+// WebSocket 서버 생성
+const io = socketIO(server, {
+  cors: {
+    origin: ['https://ddibux2.netlify.app', 'http://localhost:3000']
+  }
+});
+
+io.on('connection', (socket) => {
+  socket.on('clientMessage', (message)=>{
+    console.log(`client: ${message}`);
+    io.to(socket.id).emit('serverMessage', 'Hello client!');
+  });
+  socket.on('disconnect', ()=>{
+    console.log("client disconnected");
+  });
+});
+
+server.listen(port, () => {
+  console.log(`Example app listening at http://localhost:${port}`);
+});
