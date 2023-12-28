@@ -11,7 +11,7 @@ const pool = mysql.createPool({
 });
 
 //db 연결
-// conn.connect((error) => {
+// pool.getConnection((error, db) => {
 //   if(error){
 //     throw error;
 //   }
@@ -24,8 +24,9 @@ const pool = mysql.createPool({
 //     +"name VARCHAR(100) NOT NULL,"
 //     +"location VARCHAR(100) NULL)";
 
-//     conn.query(sql, (err, result) => {
+//     db.query(sql, (err, result) => {
 //         if(err && err.code != "ER_TABLE_EXISTS_ERROR"){
+//             db.release();
 //             throw err;
 //         }
 //         console.log("Table created successfully");
@@ -42,8 +43,9 @@ const pool = mysql.createPool({
 //     +"seller VARCHAR(100) NOT NULL,"
 //     +"FOREIGN KEY(seller) REFERENCES user(id))";
 
-//     conn.query(sql, (err, result) => {
+//     db.query(sql, (err, result) => {
 //         if(err && err.code != "ER_TABLE_EXISTS_ERROR"){
+//             db.release();
 //             throw err;
 //         }
 //         console.log("Table created successfully");
@@ -55,8 +57,9 @@ const pool = mysql.createPool({
 //     +"pid INT NOT NULL,"
 //     +"FOREIGN KEY(pid) REFERENCES product(id))";
 
-//     conn.query(sql, (err, result) => {
+//     db.query(sql, (err, result) => {
 //         if(err && err.code != "ER_TABLE_EXISTS_ERROR"){
+//             db.release();
 //             throw err;
 //         }
 //         console.log("Table created successfully");
@@ -68,8 +71,9 @@ const pool = mysql.createPool({
 //     +"pid INT NOT NULL,"
 //     +"FOREIGN KEY(pid) REFERENCES product(id))";
 
-//     conn.query(sql, (err, result) => {
+//     db.query(sql, (err, result) => {
 //         if(err && err.code != "ER_TABLE_EXISTS_ERROR"){
+//             db.release();
 //             throw err;
 //         }
 //         console.log("Table created successfully");
@@ -82,23 +86,25 @@ const pool = mysql.createPool({
 //     +"FOREIGN KEY(uid) REFERENCES user(id),"
 //     +"FOREIGN KEY(pid) REFERENCES product(id))";
 
-//     conn.query(sql, (err, result) => {
+//     db.query(sql, (err, result) => {
 //         if(err && err.code != "ER_TABLE_EXISTS_ERROR"){
+//             db.release();
 //             throw err;
 //         }
 //         console.log("Table created successfully");
 //     });
 
 //     sql = "CREATE TABLE chatRoom ("
+//     +"id INT AUTO_INCREMENT PRIMARY KEY,"
 //     +"buyer VARCHAR(100) NOT NULL,"
 //     +"pid INT NOT NULL,"
 //     +"date DATETIME NOT NULL,"
-//     +"PRIMARY KEY(buyer, pid),"
 //     +"FOREIGN KEY(buyer) REFERENCES user(id),"
 //     +"FOREIGN KEY(pid) REFERENCES product(id))";
 
-//     conn.query(sql, (err, result) => {
+//     db.query(sql, (err, result) => {
 //         if(err && err.code != "ER_TABLE_EXISTS_ERROR"){
+//             db.release();
 //             throw err;
 //         }
 //         console.log("Table created successfully");
@@ -116,12 +122,15 @@ const pool = mysql.createPool({
 //     +"FOREIGN KEY(pid) REFERENCES product(id),"
 //     +"FOREIGN KEY(sender) REFERENCES user(id))";
 
-//     conn.query(sql, (err, result) => {
+//     db.query(sql, (err, result) => {
 //         if(err && err.code != "ER_TABLE_EXISTS_ERROR"){
+//             db.release();
 //             throw err;
 //         }
 //         console.log("Table created successfully");
 //     });
+
+//     db.release();
 //   }
 // });
 
