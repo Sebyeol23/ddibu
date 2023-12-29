@@ -50,8 +50,24 @@ function createLike(req, res){
     });
 }
 
+function getProduct(req, res){
+    pool.getConnection((error, db)=>{
+        if(error) return res.status(500).json({error: error});
+        db.query(`SELECT * FROM product`, (error, results)=>{
+            db.release();
+            if(error) return res.status(400).json({error: error});
+            var products = [];
+            results.forEach(element => {
+                products.push({productId: element.id, title: element.title, body: element.body, price: element.price, date: element.date, location: element.location, status: element.status, sellerId: element.seller});
+            });
+            return res.status(200).json(products);
+        });
+    });
+}
+
 module.exports = {
     getUser,
     createChatRoom,
-    createLike
+    createLike,
+    getProduct
 }
