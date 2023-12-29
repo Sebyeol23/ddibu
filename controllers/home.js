@@ -60,9 +60,10 @@ function getProduct(req, res){
             if(error) return res.status(400).json({error: error});
             var products = [];
             results.forEach(element => {
+                const imageExtension = element.link ? element.link.split('.').pop() : null;
                 const imagePath = element.link ? path.join(__dirname, '../public/images', element.link) : null;
                 const imageBuffer = element.link ? fs.readFileSync(imagePath) : null;
-                products.push({productId: element.id, title: element.title, body: element.body, price: element.price, date: element.date, location: element.location, status: element.status, sellerId: element.seller, image: element.link ? imageBuffer.toString('base64') : null});
+                products.push({productId: element.id, title: element.title, body: element.body, price: element.price, date: element.date, location: element.location, status: element.status, sellerId: element.seller, image: element.link ? imageBuffer.toString('base64') : null, extension: element.link ? imageExtension : null});
             });
             return res.status(200).json(products);
         });
