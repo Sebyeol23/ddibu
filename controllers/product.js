@@ -25,6 +25,10 @@ function createProduct(req, res){
             db.release();
             return res.status(400).json({error: error});
           }
+          if(!req.file){
+            db.release();
+            return res.sendStatus(200);
+          }
           db.query(`INSERT INTO image(link, pid) VALUES('${req.file.filename}', '${result.insertId}')`, (error)=>{
             db.release();    
             if(error) return res.status(400).json({error: error});
