@@ -111,15 +111,13 @@ const pool = mysql.createPool({
 //     });
 
 //     sql = "CREATE TABLE chat ("
-//     +"buyer VARCHAR(100) NOT NULL,"
-//     +"pid INT NOT NULL,"
+//     +"id INT AUTO_INCREMENT PRIMARY KEY,"
 //     +"message VARCHAR(100) NOT NULL,"
 //     +"date DATETIME NOT NULL,"
 //     +"status TINYINT(1) NOT NULL,"
-//     +"sender VARCHAR(100) NOT NULL,"
-//     +"PRIMARY KEY(buyer, pid),"
-//     +"FOREIGN KEY(buyer) REFERENCES user(id),"
-//     +"FOREIGN KEY(pid) REFERENCES product(id),"
+//     +"rid INT NOT NULL,"
+//     +"sender VARCHAR(100) NOT NULL," 
+//     +"FOREIGN KEY(rid) REFERENCES chatRoom(id),"
 //     +"FOREIGN KEY(sender) REFERENCES user(id))";
 
 //     db.query(sql, (err, result) => {
