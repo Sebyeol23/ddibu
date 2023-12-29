@@ -3,6 +3,7 @@ const bodyParser = require('body-parser');
 const cors = require('cors');
 const http = require('http');
 const socketIO = require('socket.io');
+const path = require('path');
 
 const app = express();
 
@@ -20,6 +21,8 @@ const likeRouter = require('./routes/like');
 app.use(cors({
   origin: allowedOrigins
 }));
+
+app.use(express.static(path.join(__dirname, 'public')));
 
 app.use(bodyParser.json());
 
