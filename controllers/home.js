@@ -1,4 +1,6 @@
 const pool = require('../db/connection');
+const path = require('path');
+const fs = require('fs');
 
 function getUser(req, res){
     res.send(req.decoded);
@@ -53,12 +55,14 @@ function createLike(req, res){
 function getProduct(req, res){
     pool.getConnection((error, db)=>{
         if(error) return res.status(500).json({error: error});
-        db.query(`SELECT * FROM product ${req.query.lastId ? `WHERE id < ${req.query.lastId}` : ""} ORDER BY id DESC LIMIT ${req.query.limit}`, (error, results)=>{
+        db.query(`SELECT product.id, product.title, product.price, product.date, product.body, product.status, product.seller, image.link FROM product JOIN image ON product.id = image.pid ${req.query.lastId ? `WHERE id < ${req.query.lastId} ` : ""}ORDER BY id DESC LIMIT ${req.query.limit}`, (error, results)=>{
             db.release();
             if(error) return res.status(400).json({error: error});
             var products = [];
             results.forEach(element => {
-                products.push({productId: element.id, title: element.title, body: element.body, price: element.price, date: element.date, location: element.location, status: element.status, sellerId: element.seller});
+                const imagePath = element.link ? path.join(__dirname, '../public/images', element.link) : null;
+                const imageBuffer = element.link ? fs.readFileSync(imagePath) : null;
+                products.push({productId: element.id, title: element.title, body: element.body, price: element.price, date: element.date, location: element.location, status: element.status, sellerId: element.seller, image: element.link ? imageBuffer.toString('base64') : null});
             });
             return res.status(200).json(products);
         });
