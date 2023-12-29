@@ -53,7 +53,7 @@ function createLike(req, res){
 function getProduct(req, res){
     pool.getConnection((error, db)=>{
         if(error) return res.status(500).json({error: error});
-        db.query(`SELECT * FROM product ${req.body.lastId ? `WHERE id < ${req.body.lastId}` : ""} ORDER BY id DESC LIMIT ${req.body.limit}`, (error, results)=>{
+        db.query(`SELECT * FROM product ${req.query.lastId ? `WHERE id < ${req.query.lastId}` : ""} ORDER BY id DESC LIMIT ${req.query.limit}`, (error, results)=>{
             db.release();
             if(error) return res.status(400).json({error: error});
             var products = [];
