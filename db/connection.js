@@ -38,7 +38,6 @@ const pool = mysql.createPool({
 //     +"price INT NOT NULL,"
 //     +"date DATETIME NOT NULL,"
 //     +"body VARCHAR(200) NOT NULL,"
-//     +"location VARCHAR(100) NULL,"
 //     +"status TINYINT(1) NOT NULL DEFAULT 0,"
 //     +"seller VARCHAR(100) NOT NULL,"
 //     +"FOREIGN KEY(seller) REFERENCES user(id))";
