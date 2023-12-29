@@ -27,7 +27,31 @@ function createChatRoom(req, res){
     });
 }
 
+function createLike(req, res){
+    pool.getConnection((error, db)=>{
+        if(error){
+            return res.status(500).json({error: error});
+        }
+        db.query(`SELECT seller FROM product WHERE id = ${req.body.productId}`, (error, results)=>{           
+            if(error){
+                db.release();
+                return res.status(400).json({error: error});
+            }
+            if(results[0].seller == req.decoded.userId){
+                db.release();
+                return res.status(400).json({error: "판매자와 구매자가 같습니다."});
+            }
+            db.query(`INSERT INTO wishList(uid, pid) VALUES('${req.decoded.userId}', '${req.body.productId}')`, (error)=>{
+                db.release();
+                if(error) return res.status(400).json({error: error});
+                return res.sendStatus(200);
+            });
+        });
+    });
+}
+
 module.exports = {
     getUser,
-    createChatRoom
+    createChatRoom,
+    createLike
 }
