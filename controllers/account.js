@@ -36,7 +36,7 @@ function getToken(req, res){
                     },
                     key,
                     {
-                        expiresIn: "10m"
+                        expiresIn: "2h"
                     }
                 );
 
