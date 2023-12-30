@@ -36,10 +36,16 @@ function createChatRoom(req, res){
         if(error){
             return res.status(500).json({error: error});
         }
-        db.query(`INSERT INTO chatRoom(buyer, pid, date) VALUES('${req.decoded.userId}', ${req.body.productId}, '${req.body.date}')`, (error)=>{
-            db.release();
-            if(error) return res.status(400).json({error: error});
-            return res.sendStatus(200);
+        db.query(`INSERT INTO chatRoom(buyer, pid, date) VALUES('${req.decoded.userId}', ${req.body.productId}, '${req.body.date}')`, (error, results)=>{
+            if(error){
+                db.release();
+                return res.status(400).json({error: error});
+            }
+            db.query(`INSERT INTO chat(message, date, status, rid, sender) VALUES('${req.body.message}', '${req.body.date}', 0, ${results.insertId}, '${req.decoded.userId}')`, (error)=>{
+                db.release();
+                if(error) return res.status(400).json({error: error});
+                return res.sendStatus(200);
+            });
         });
     });
 }
