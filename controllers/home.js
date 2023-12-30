@@ -55,7 +55,7 @@ function createLike(req, res){
 function getProduct(req, res){
     pool.getConnection((error, db)=>{
         if(error) return res.status(500).json({error: error});
-        db.query(`SELECT product.id, product.title, product.price, product.date, product.body, product.status, product.seller, image.link FROM product LEFT JOIN image ON product.id = image.pid ${req.query.lastId ? `WHERE id < ${req.query.lastId} ` : ""}ORDER BY id DESC LIMIT ${req.query.limit}`, (error, results)=>{
+        db.query(`SELECT product.id, product.title, product.price, product.date, product.body, product.status, product.seller, image.link FROM product LEFT JOIN image ON product.id = image.pid ${req.query.lastId ? `WHERE product.id < ${req.query.lastId} ` : ""}ORDER BY product.id DESC LIMIT ${req.query.limit}`, (error, results)=>{
             db.release();
             if(error) return res.status(400).json({error: error});
             var products = [];
