@@ -18,6 +18,16 @@ const profileRouter = require('./routes/profile');
 const chatRouter = require('./routes/chat');
 const likeRouter = require('./routes/like');
 
+// HTTP 서버 생성
+const server = http.createServer(app);
+
+// WebSocket 서버 생성
+const io = socketIO(server, {
+  cors: {
+    origin: ['https://ddibux2.netlify.app', 'http://localhost:3000']
+  }
+});
+
 app.use(cors({
   origin: allowedOrigins
 }));
@@ -25,6 +35,11 @@ app.use(cors({
 app.use(express.static(path.join(__dirname, 'public')));
 
 app.use(bodyParser.json());
+
+app.use((req, res, next)=>{
+  req.io = io;
+  next();
+})
 
 app.get('/', (req, res) => {
   res.send('Hello World!')
@@ -36,16 +51,6 @@ app.use('/api/product', productRouter);
 app.use('/api/profile', profileRouter);
 app.use('/api/chat', chatRouter);
 app.use('/api/like', likeRouter);
-
-// HTTP 서버 생성
-const server = http.createServer(app);
-
-// WebSocket 서버 생성
-const io = socketIO(server, {
-  cors: {
-    origin: ['https://ddibux2.netlify.app', 'http://localhost:3000']
-  }
-});
 
 io.on('connection', (socket) => {
   socket.on('clientMessage', (message)=>{
@@ -60,5 +65,3 @@ io.on('connection', (socket) => {
 server.listen(port, () => {
   console.log(`Example app listening at http://localhost:${port}`);
 });
-
-module.exports = {io};
