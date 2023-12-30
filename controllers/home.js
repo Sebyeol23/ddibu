@@ -1,7 +1,6 @@
 const pool = require('../db/connection');
 const path = require('path');
 const fs = require('fs');
-const {io} = require('../app');
 
 function getUser(req, res){
     res.send(req.decoded);
@@ -45,9 +44,7 @@ function createChatRoom(req, res){
             db.query(`INSERT INTO chat(message, date, status, rid, sender) VALUES('${req.body.message}', '${req.body.date}', 0, ${results.insertId}, '${req.decoded.userId}')`, (error)=>{
                 db.release();
                 if(error) return res.status(400).json({error: error});
-                io.on('connection', (socket) => {
-                    io.emit('newChatRoom', results.insertId);
-                });
+                req.io.emit('newChatRoom', results.insertId);
                 return res.sendStatus(200);
             });
         });
