@@ -6,6 +6,25 @@ function getUser(req, res){
     res.send(req.decoded);
 }
 
+function getChatRoom(req, res){
+    pool.getConnection((error, db)=>{
+        if(error){
+            return res.status(500).json({error: error});
+        }
+        db.query(`SELECT chatRoom.id, product.seller FROM chatRoom JOIN product ON chatRoom.pid = product.seller WHERE chatRoom.buyer = ${req.decoded.userId} AND chatRoom.pid = ${req.query.productId}`, (error, results)=>{           
+            if(error){
+                db.release();
+                return res.status(400).json({error: error});
+            }
+            if(results.length && results[0].seller == req.decoded.userId){
+                db.release();
+                return res.status(400).json({error: "판매자와 구매자가 같습니다."});
+            }
+            return res.status(200).json({roomId: results.length ? results[0].id : null});
+        });
+    });
+}
+
 function createChatRoom(req, res){
     pool.getConnection((error, db)=>{
         if(error){
@@ -100,6 +119,7 @@ function getProductInfo(req, res){
 
 module.exports = {
     getUser,
+    getChatRoom,
     createChatRoom,
     createLike,
     getProduct,
