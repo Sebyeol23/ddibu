@@ -70,9 +70,37 @@ function getProduct(req, res){
     });
 }
 
+function getProductInfo(req, res){
+    pool.getConnection((error, db)=>{
+        if(error) return res.status(500).json({error: error});
+        db.query(`SELECT product.id, product.title, product.price, product.date, product.body, product.status, product.seller, image.link FROM product LEFT JOIN image ON product.id = image.pid WHERE product.id = ${req.query.productId}`, (error, results)=>{
+            db.release();
+            if(error) return res.status(400).json({error: error});
+            const element = results[0]
+            const imageExtension = element.link ? element.link.split('.').pop() : null;
+            const imagePath = element.link ? path.join(__dirname, '../public/images', element.link) : null;
+            const imageBuffer = element.link ? fs.readFileSync(imagePath) : null;
+            const productInfo = {
+                productId: element.id, 
+                title: element.title, 
+                body: element.body, 
+                price: element.price, 
+                date: element.date, 
+                location: element.location, 
+                status: element.status, 
+                sellerId: element.seller, 
+                image: element.link ? imageBuffer.toString('base64') : null, 
+                extension: element.link ? imageExtension : null
+            };
+            return res.status(200).json(productInfo);
+        });
+    });
+}
+
 module.exports = {
     getUser,
     createChatRoom,
     createLike,
-    getProduct
+    getProduct,
+    getProductInfo
 }
