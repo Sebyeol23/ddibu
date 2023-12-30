@@ -76,7 +76,7 @@ function getProductInfo(req, res){
         db.query(`SELECT product.id, product.title, product.price, product.date, product.body, product.status, product.seller, image.link FROM product LEFT JOIN image ON product.id = image.pid WHERE product.id = ${req.query.productId}`, (error, results)=>{
             db.release();
             if(error) return res.status(400).json({error: error});
-            if(!results) return res.status(404).json({error: "상품이 없습니다."});
+            if(!results.length) return res.status(404).json({error: "상품이 없습니다."});
             const element = results[0]
             const imageExtension = element.link ? element.link.split('.').pop() : null;
             const imagePath = element.link ? path.join(__dirname, '../public/images', element.link) : null;
