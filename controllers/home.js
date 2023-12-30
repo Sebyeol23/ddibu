@@ -36,7 +36,7 @@ function createChatRoom(req, res){
         if(error){
             return res.status(500).json({error: error});
         }
-        db.query(`SELECT seller FROM product WHERE id = ${req.body.productId}`, (error, results)=>{           
+        db.query(`SELECT seller FROM product WHERE id = '${req.body.productId}'`, (error, results)=>{           
             if(error){
                 db.release();
                 return res.status(400).json({error: error});
