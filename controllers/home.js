@@ -11,7 +11,7 @@ function getChatRoom(req, res){
         if(error){
             return res.status(500).json({error: error});
         }
-        db.query(`SELECT seller FROM product WHERE id = '${req.query.productId}'`, (error, results)=>{
+        db.query(`SELECT seller FROM product WHERE id = ${req.query.productId}`, (error, results)=>{
             if(error){
                 db.release();
                 return res.status(400).json({error: error});
@@ -20,7 +20,7 @@ function getChatRoom(req, res){
                 db.release();
                 return res.status(400).json({error: "판매자와 구매자가 같습니다."});
             }
-            db.query(`SELECT chatRoom.id, product.seller FROM chatRoom JOIN product ON chatRoom.pid = product.seller WHERE chatRoom.buyer = '${req.decoded.userId}' AND chatRoom.pid = '${req.query.productId}'`, (error, results)=>{           
+            db.query(`SELECT chatRoom.id, product.seller FROM chatRoom JOIN product ON chatRoom.pid = product.seller WHERE chatRoom.buyer = '${req.decoded.userId}' AND chatRoom.pid = ${req.query.productId}`, (error, results)=>{           
                 if(error){
                     db.release();
                     return res.status(400).json({error: error});
