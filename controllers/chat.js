@@ -23,7 +23,7 @@ function getChat(req, res){
             if(error) return res.status(400).json({error: error});
             var chats = [];
             results.forEach(element => {
-                chats.push({message: element.message, date: element.date, status: element.status, isSender: eq.decoded.userId == element.sender ? true : false});
+                chats.push({message: element.message, date: element.date, status: element.status, isSender: req.decoded.userId == element.sender ? true : false});
             });
             return res.status(200).json(chats);
         });
