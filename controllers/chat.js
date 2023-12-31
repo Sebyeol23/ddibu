@@ -30,7 +30,22 @@ function getChat(req, res){
     });
 }
 
+function createChat(req, res){
+    pool.getConnection((error, db)=>{
+        if(error){
+            return res.status(500).json({error: error});
+        }
+        db.query(`INSERT INTO chat(message, date, status, rid, sender) VALUES('${req.body.message}', '${req.body.date}', 0, ${req.body.roomId}, '${req.decoded.userId}')`, (error)=>{
+            db.release();
+            if(error) return res.status(400).json({error: error});
+            req.io.emit('newChat');
+            return res.sendStatus(200);
+        });
+    });
+}
+
 module.exports = {
     getChatRoom,
-    getChat
+    getChat,
+    createChat
 }
