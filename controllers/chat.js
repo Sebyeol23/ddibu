@@ -18,7 +18,7 @@ function getChatRoom(req, res){
 function getChat(req, res){
     pool.getConnection((error, db)=>{
         if(error) return res.status(500).json({error: error});
-        db.query(`SELECT id, message, date, status, sender FROM chat WHERE rid = '${req.query.roomId}' ORDER BY date DESC`, (error, results)=>{
+        db.query(`SELECT id, message, date, status, sender FROM chat WHERE rid = '${req.query.roomId}' ORDER BY id`, (error, results)=>{
             db.release();
             if(error) return res.status(400).json({error: error});
             var chats = [];
