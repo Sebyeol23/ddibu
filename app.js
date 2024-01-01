@@ -52,6 +52,9 @@ app.use('/api/profile', profileRouter);
 app.use('/api/chat', chatRouter);
 app.use('/api/like', likeRouter);
 
+const socketToUserMap = {};
+const userToSocketMap = {};
+
 io.on('connection', (socket) => {
   socket.on('clientMessage', (message)=>{
     console.log(`client: ${message}`);
@@ -65,3 +68,8 @@ io.on('connection', (socket) => {
 server.listen(port, () => {
   console.log(`Example app listening at http://localhost:${port}`);
 });
+
+module.exports = {
+  socketToUserMap,
+  userToSocketMap
+}
