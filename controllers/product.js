@@ -25,6 +25,14 @@ function createProduct(req, res){
             db.release();
             return res.status(400).json({error: error});
           }
+          req.body.tag.forEach((tagName)=>{
+            db.query(`INSERT INTO tag(name, pid) VALUES('${tagName}', ${result.insertId})`, (error)=>{
+              if(error){
+                db.release();
+                return res.status(400).json({error: error});
+              }
+            });
+          });
           if(!req.file){
             db.release();
             return res.sendStatus(200);
