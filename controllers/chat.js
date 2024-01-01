@@ -36,10 +36,16 @@ function createChat(req, res){
             return res.status(500).json({error: error});
         }
         db.query(`INSERT INTO chat(message, date, status, rid, sender) VALUES('${req.body.message}', '${req.body.date}', 0, ${req.body.roomId}, '${req.decoded.userId}')`, (error)=>{
-            db.release();
-            if(error) return res.status(400).json({error: error});
-            req.io.emit('newChat');
-            return res.sendStatus(200);
+            if(error){
+                db.release();
+                return res.status(400).json({error: error});
+            }
+            db.query(`SELECT chatRoom.buyer, product.seller FROM chatRoom JOIN product ON chatRoom.pid = product.id WHERE chatRoom.id = ${req.body.roomId}`, (error, results)=>{
+                db.release();
+                if(error) return res.status(400).json({error: error});
+                req.io.to(results[0].buyer).to(results[0].seller).emit('newChat');
+                return res.sendStatus(200);
+            });
         });
     });
 }
