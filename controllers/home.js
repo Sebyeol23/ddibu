@@ -115,7 +115,7 @@ function getProductInfo(req, res){
             const imagePath = element.link ? path.join(__dirname, '../public/images', element.link) : null;
             const imageBuffer = element.link ? fs.readFileSync(imagePath) : null;
             const tag = [];
-            if(!element.name){
+            if(element.name){
                 results.forEach((result)=>{
                     tag.push(result.name);
                 })
