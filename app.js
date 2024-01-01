@@ -54,19 +54,6 @@ app.use('/api/chat', chatRouter);
 app.use('/api/like', likeRouter);
 app.use('/api/socket', socketRouter);
 
-const socketToUserMap = {};
-const userToSocketMap = {};
-
-function insertMap(socketId, userId){
-  socketToUserMap[socketId] = userId;
-  if(userToSocketMap[userId]){
-      userToSocketMap[userId].push(socketId);
-  }
-  else{
-      userToSocketMap[userId] = [socketId];
-  }
-}
-
 io.on('connection', (socket) => {
   socket.on('clientMessage', (message)=>{
     console.log(`client: ${message}`);
@@ -80,7 +67,3 @@ io.on('connection', (socket) => {
 server.listen(port, () => {
   console.log(`Example app listening at http://localhost:${port}`);
 });
-
-module.exports = {
-  insertMap
-}
