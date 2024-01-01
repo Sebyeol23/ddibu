@@ -54,12 +54,22 @@ app.use('/api/chat', chatRouter);
 app.use('/api/like', likeRouter);
 app.use('/api/socket', socketRouter);
 
+const {socketToUserMap, userToSocketMap} = require('./controllers/socket');
+
 io.on('connection', (socket) => {
   socket.on('clientMessage', (message)=>{
     console.log(`client: ${message}`);
     io.to(socket.id).emit('serverMessage', 'Hello client!');
   });
   socket.on('disconnect', ()=>{
+    const userId = socketToUserMap.get(socket.id);
+    socketToUserMap.delete(socket.id);
+    if(userToSocketMap.get(userId).length > 1){
+      userToSocketMap.get(userid).splice(userToSocketMap.get(userId).indexOf(socket.id), 1);
+    }
+    else{
+      userToSocketMap.delete(userid);
+    }
     console.log("client disconnected");
   });
 });
