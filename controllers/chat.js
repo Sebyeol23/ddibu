@@ -1,5 +1,5 @@
 const pool = require('../db/connection');
-const userToSocketMap = require('./socket');
+const {userToSocketMap} = require('./socket');
 
 function getChatRoom(req, res){
     pool.getConnection((error, db)=>{
