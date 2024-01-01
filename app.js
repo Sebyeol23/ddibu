@@ -57,6 +57,16 @@ app.use('/api/socket', socketRouter);
 const socketToUserMap = {};
 const userToSocketMap = {};
 
+function insertMap(socketId, userId){
+  socketToUserMap[socketId] = userId;
+  if(userToSocketMap[userId]){
+      userToSocketMap[userId].push(socketId);
+  }
+  else{
+      userToSocketMap[userId] = [socketId];
+  }
+}
+
 io.on('connection', (socket) => {
   socket.on('clientMessage', (message)=>{
     console.log(`client: ${message}`);
@@ -72,6 +82,5 @@ server.listen(port, () => {
 });
 
 module.exports = {
-  socketToUserMap,
-  userToSocketMap
+  insertMap
 }
