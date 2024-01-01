@@ -25,7 +25,7 @@ function createProduct(req, res){
             db.release();
             return res.status(400).json({error: error});
           }
-          req.body.tag.forEach((tagName)=>{
+          JSON.parse(req.body.tag).forEach((tagName)=>{
             db.query(`INSERT INTO tag(name, pid) VALUES('${tagName}', ${result.insertId})`, (error)=>{
               if(error){
                 db.release();
