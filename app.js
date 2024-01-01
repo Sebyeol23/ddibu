@@ -17,6 +17,7 @@ const productRouter = require('./routes/product');
 const profileRouter = require('./routes/profile');
 const chatRouter = require('./routes/chat');
 const likeRouter = require('./routes/like');
+const socketRouter = require('./routes/socket');
 
 // HTTP 서버 생성
 const server = http.createServer(app);
@@ -51,6 +52,7 @@ app.use('/api/product', productRouter);
 app.use('/api/profile', profileRouter);
 app.use('/api/chat', chatRouter);
 app.use('/api/like', likeRouter);
+app.use('/api/socket', socketRouter);
 
 const socketToUserMap = {};
 const userToSocketMap = {};
