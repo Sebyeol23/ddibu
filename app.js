@@ -66,10 +66,10 @@ io.on('connection', (socket) => {
     if(userId){
       socketToUserMap.delete(socket.id);
       if(userToSocketMap.get(userId).length > 1){
-        userToSocketMap.get(userid).splice(userToSocketMap.get(userId).indexOf(socket.id), 1);
+        userToSocketMap.get(userId).splice(userToSocketMap.get(userId).indexOf(socket.id), 1);
       }
       else{
-        userToSocketMap.delete(userid);
+        userToSocketMap.delete(userId);
       }
     }  
     console.log("client disconnected");
