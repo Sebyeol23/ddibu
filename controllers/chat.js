@@ -44,7 +44,7 @@ function createChat(req, res){
             db.query(`SELECT chatRoom.buyer, product.seller FROM chatRoom JOIN product ON chatRoom.pid = product.id WHERE chatRoom.id = ${req.body.roomId}`, (error, results)=>{
                 db.release();
                 if(error) return res.status(400).json({error: error});
-                const receiverArray = [...userToSocketMap.get(results[0].buyer), ...userToSocketMap.get(results[0].seller)];
+                const receiverArray = [...(userToSocketMap.get(results[0].buyer) ? userToSocketMap.get(results[0].buyer) : []), ...(userToSocketMap.get(results[0].seller) ? userToSocketMap.get(results[0].seller) : [])];
                 req.io.to(receiverArray).emit('newChat');
                 return res.sendStatus(200);
             });
