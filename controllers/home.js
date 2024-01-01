@@ -53,7 +53,8 @@ function createChatRoom(req, res){
                 db.query(`SELECT seller FROM product WHERE id = ${req.body.productId}`, (error, results)=>{
                     db.release();
                     if(error) return res.status(400).json({error: error});
-                    req.io.to(userToSocketMap.get(req.decoded.userId)).to(userToSocketMap.get(results[0].seller)).emit('newChatRoom', roomId);
+                    const receiverArray = [...userToSocketMap.get(req.decoded.userId), ...userToSocketMap.get(results[0].seller)];
+                    req.io.to(receiverArray).emit('newChatRoom', roomId);
                     return res.sendStatus(200);
                 });
             });
