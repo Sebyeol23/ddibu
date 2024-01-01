@@ -1,17 +1,15 @@
-const socketToUserMap = {};
-const userToSocketMap = {};
+const socketToUserMap = new Map();
+const userToSocketMap = new Map();
 
 function createSocketInfo(req, res){
-    socketToUserMap[req.body.socketId] = req.decoded.userId;
-    if(userToSocketMap[req.decoded.userId]){
-        userToSocketMap[req.decoded.userId].push(req.body.socketId);
+    socketToUserMap.set(req.body.socketId, req.decoded.userId);
+    if(userToSocketMap.get(req.decoded.userId)){
+        userToSocketMap.get(req.decoded.userId).push(req.body.socketId);
     }
     else{
-        userToSocketMap[req.decoded.userId] = [req.body.socketId];
+        userToSocketMap.set(req.decoded.userId, [req.body.socketId]);
     }
 }
-
-console.log(socketToUserMap);
 
 module.exports = {
     createSocketInfo,
