@@ -1,6 +1,7 @@
 const pool = require('../db/connection');
 const path = require('path');
 const fs = require('fs');
+const {userToSocketMap} = require('./socket');
 
 function getUser(req, res){
     res.send(req.decoded);
@@ -41,11 +42,20 @@ function createChatRoom(req, res){
                 db.release();
                 return res.status(400).json({error: error});
             }
-            db.query(`INSERT INTO chat(message, date, status, rid, sender) VALUES('${req.body.message}', '${req.body.date}', 0, ${results.insertId}, '${req.decoded.userId}')`, (error)=>{
-                db.release();
-                if(error) return res.status(400).json({error: error});
-                req.io.emit('newChatRoom', results.insertId);
-                return res.sendStatus(200);
+
+            const roomId = results.insertId;
+
+            db.query(`INSERT INTO chat(message, date, status, rid, sender) VALUES('${req.body.message}', '${req.body.date}', 0, ${roomId}, '${req.decoded.userId}')`, (error)=>{                
+                if(error){
+                    db.release();
+                    return res.status(400).json({error: error});
+                } 
+                db.query(`SELECT seller FROM product WHERE id = ${req.body.productId}`, (error, results)=>{
+                    db.release();
+                    if(error) return res.status(400).json({error: error});
+                    req.io.to(userToSocketMap.get(req.decoded.userId)).to(userToSocketMap.get(results[0].seller)).emit('newChatRoom', roomId);
+                    return res.sendStatus(200);
+                });
             });
         });
     });
