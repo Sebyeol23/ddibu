@@ -72,7 +72,6 @@ io.on('connection', (socket) => {
         userToSocketMap.delete(userId);
       }
     }  
-    console.log("client disconnected");
   });
 });
 
