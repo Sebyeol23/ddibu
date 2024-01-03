@@ -16,6 +16,9 @@ const storage = multer.diskStorage({
 const upload = multer({ storage });
 
 function createProduct(req, res){
+  if(!req.file){
+    return res.status(400).json({error: "이미지가 없습니다."});
+  }
   pool.getConnection((error, db)=>{
       if(error){
           return res.status(500).json({error: error});
@@ -33,10 +36,6 @@ function createProduct(req, res){
               }
             });
           });
-          if(!req.file){
-            db.release();
-            return res.sendStatus(200);
-          }
           db.query(`INSERT INTO image(link, pid) VALUES('${req.file.filename}', '${result.insertId}')`, (error)=>{
             db.release();    
             if(error) return res.status(400).json({error: error});
